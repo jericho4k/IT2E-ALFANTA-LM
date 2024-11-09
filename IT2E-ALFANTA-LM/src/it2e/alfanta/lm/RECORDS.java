@@ -71,28 +71,21 @@ public class RECORDS {
             findRow.setInt(1, loanId);
 
             try (ResultSet result = findRow.executeQuery()) {
-                // Print the header
-                System.out.println("\n----------------------------------------------------------------------------------------------------");
-                System.out.printf("| %-10s | %-30s | %-15s | %-15s | %-10s | %-10s | %-10s | %-15s |\n",
-                                  "Loan ID", "Applicant Name", "Loan Amount", "Interest Rate", "Status", "Term (months)", "Loan Type", "Disbursal Date");
-                System.out.println("----------------------------------------------------------------------------------------------------");
-
                 if (result.next()) {
-                    int loanID = result.getInt("Loan_ID");
-                    String applicantName = result.getString("Name");
-                    double loanAmount = result.getDouble("Loan_Amount");
-                    double interestRate = result.getDouble("Interest_Rate");
-                    String loanStatus = result.getString("Loan_Status");
-                    int loanTerm = result.getInt("Loan_Term");
-                    String loanType = result.getString("Loan_Type");
-                    String disbursalDate = result.getString("Disbursal_Date");
-
-                    System.out.printf("| %-10d | %-30s | %-15.2f | %-15.2f | %-10s | %-10d | %-10s | %-15s |\n",
-                                      loanID, applicantName, loanAmount, interestRate, loanStatus, loanTerm, loanType, disbursalDate);
+                    // Print the receipt header-----------------
+                    System.out.println("\n--------------------- LOAN RECORD ----------------------");
+                    System.out.printf("| %-30s : %-20s |\n", "Loan ID", result.getInt("Loan_ID"));
+                    System.out.printf("| %-30s : %-20s |\n", "Applicant Name", result.getString("Name"));
+                    System.out.printf("| %-30s : %-20.2f |\n", "Loan Amount", result.getDouble("Loan_Amount"));
+                    System.out.printf("| %-30s : %-20.2f |\n", "Interest Rate", result.getDouble("Interest_Rate"));
+                    System.out.printf("| %-30s : %-20s |\n", "Loan Status", result.getString("Loan_Status"));
+                    System.out.printf("| %-30s : %-20d |\n", "Loan Term (months)", result.getInt("Loan_Term"));
+                    System.out.printf("| %-30s : %-20s |\n", "Loan Type", result.getString("Loan_Type"));
+                    System.out.printf("| %-30s : %-20s |\n", "Disbursal Date", result.getString("Disbursal_Date"));
+                    System.out.println("---------------------------------------------------------");
                 } else {
-                    System.out.println("| No records found for the given Loan ID.");
+                    System.out.println("No records found for the given Loan ID.");
                 }
-                System.out.println("----------------------------------------------------------------------------------------------------");
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -107,7 +100,7 @@ public class RECORDS {
 
         String[] generalHeaders = {"Loan ID", "Applicant Name", "Loan Amount", "Interest Rate", "Status", "Term (months)", "Loan Type", "Disbursal Date"};
         String[] generalColumns = {"Loan_ID", "Name", "Loan_Amount", "Interest_Rate", "Loan_Status", "Loan_Term", "Loan_Type", "Disbursal_Date"};
-
+                           
         conf.viewRecords(generalQuery, generalHeaders, generalColumns);
     }
 }

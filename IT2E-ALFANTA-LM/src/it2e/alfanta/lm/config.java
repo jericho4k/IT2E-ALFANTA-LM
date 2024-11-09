@@ -74,11 +74,12 @@ public static Connection connectDB() {
 
         // Print the headers dynamically
         StringBuilder headerLine = new StringBuilder();
-        headerLine.append("---------------------------------------------------------------------------------------------\n| ");
+        
+        headerLine.append("\n--------------------------------------------------------------------------------------- LOAN REPORT -------------------------------------------------------------------------------------\n| ");
         for (String header : columnHeaders) {
             headerLine.append(String.format("%-20s | ", header)); // Adjust formatting as needed
         }
-        headerLine.append("\n---------------------------------------------------------------------------------------------");
+        headerLine.append("\n-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         System.out.println(headerLine.toString());
 
@@ -97,7 +98,7 @@ public static Connection connectDB() {
                 System.out.println(row.toString());
                 recordCount++; // Increment record counter
             }                   
-            System.out.println("---------------------------------------------------------------------------------------------");
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             System.out.println(recordCount + " record(s) retrieved."); // Display the number of records retrieved
         }
 
