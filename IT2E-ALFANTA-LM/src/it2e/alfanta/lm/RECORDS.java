@@ -50,47 +50,52 @@ public class RECORDS {
     }
 
     public void generateSpecificLoanRecord() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter Loan ID: ");
-        int loanId = sc.nextInt();
+    Scanner sc = new Scanner(System.in);
+    generateGeneralLoanReport();
 
-        // Check if the Loan ID exists
-        while (conf.getSingleValue("SELECT Loan_ID FROM TBL_Loans WHERE Loan_ID = ?", loanId) == 0) {
-            System.out.print("Loan ID doesn't exist, try again: ");
-            loanId = sc.nextInt();
-        }
+    System.out.print("Enter Loan ID: ");
+    int loanId = sc.nextInt();
 
-        // SQL query to fetch loan details
-        String specificQuery = "SELECT l.Loan_ID, a.Name, l.Loan_Amount, l.Interest_Rate, l.Loan_Status, l.Loan_Term, l.Loan_Type, l.Disbursal_Date " +
-                               "FROM TBL_Loans l " +
-                               "JOIN TBL_Applicants a ON l.Applicant_ID = a.Applicant_ID " +
-                               "WHERE l.Loan_ID = ?";
-
-        try (Connection conn = conf.connectDB();
-             PreparedStatement findRow = conn.prepareStatement(specificQuery)) {
-            findRow.setInt(1, loanId);
-
-            try (ResultSet result = findRow.executeQuery()) {
-                if (result.next()) {
-                    // Print the receipt header-----------------
-                    System.out.println("\n--------------------- LOAN RECORD ----------------------");
-                    System.out.printf("| %-30s : %-20s |\n", "Loan ID", result.getInt("Loan_ID"));
-                    System.out.printf("| %-30s : %-20s |\n", "Applicant Name", result.getString("Name"));
-                    System.out.printf("| %-30s : %-20.2f |\n", "Loan Amount", result.getDouble("Loan_Amount"));
-                    System.out.printf("| %-30s : %-20.2f |\n", "Interest Rate", result.getDouble("Interest_Rate"));
-                    System.out.printf("| %-30s : %-20s |\n", "Loan Status", result.getString("Loan_Status"));
-                    System.out.printf("| %-30s : %-20d |\n", "Loan Term (months)", result.getInt("Loan_Term"));
-                    System.out.printf("| %-30s : %-20s |\n", "Loan Type", result.getString("Loan_Type"));
-                    System.out.printf("| %-30s : %-20s |\n", "Disbursal Date", result.getString("Disbursal_Date"));
-                    System.out.println("---------------------------------------------------------");
-                } else {
-                    System.out.println("No records found for the given Loan ID.");
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    // Check if the Loan ID exists
+    while (conf.getSingleValue("SELECT Loan_ID FROM TBL_Loans WHERE Loan_ID = ?", loanId) == 0) {
+        System.out.print("Loan ID doesn't exist, try again: ");
+        loanId = sc.nextInt();
     }
+
+    // SQL query to fetch loan details
+    String specificQuery = "SELECT l.Loan_ID, a.Name, l.Loan_Amount, l.Interest_Rate, l.Loan_Status, l.Loan_Term, l.Loan_Type, l.Disbursal_Date " +
+                           "FROM TBL_Loans l " +
+                           "JOIN TBL_Applicants a ON l.Applicant_ID = a.Applicant_ID " +
+                           "WHERE l.Loan_ID = ?";
+
+    try (Connection conn = conf.connectDB();
+         PreparedStatement findRow = conn.prepareStatement(specificQuery)) {
+        findRow.setInt(1, loanId);
+
+        try (ResultSet result = findRow.executeQuery()) {
+            if (result.next()) {
+                // Print Loan ID and Applicant Name above the table
+                System.out.println("\n--------------------- LOAN RECORD -----------------------");
+                System.out.printf("| %-30s : %-20d |\n", "Loan ID", result.getInt("Loan_ID"));
+                System.out.printf("| %-30s : %-20s |\n", "Applicant Name", result.getString("Name"));
+                System.out.println("---------------------------------------------------------");
+
+                // Print the remaining loan details as a table
+                System.out.printf("| %-30s : %-20.2f |\n", "Loan Amount", result.getDouble("Loan_Amount"));
+                System.out.printf("| %-30s : %-20.2f |\n", "Interest Rate", result.getDouble("Interest_Rate"));
+                System.out.printf("| %-30s : %-20s |\n", "Loan Status", result.getString("Loan_Status"));
+                System.out.printf("| %-30s : %-20d |\n", "Loan Term (months)", result.getInt("Loan_Term"));
+                System.out.printf("| %-30s : %-20s |\n", "Loan Type", result.getString("Loan_Type"));
+                System.out.printf("| %-30s : %-20s |\n", "Disbursal Date", result.getString("Disbursal_Date"));
+                System.out.println("---------------------------------------------------------");
+            } else {
+                System.out.println("No records found for the given Loan ID.");
+            }
+        }
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
 
     public void generateGeneralLoanReport() {
         // SQL query to fetch all loans and their applicants
